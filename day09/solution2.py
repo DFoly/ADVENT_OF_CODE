@@ -103,18 +103,13 @@ class Solution:
         insert the file block into this location
         """
         start_idx, end_idx, file_size = hash_map_file_blocks[current_id]
-        #print(start_idx, end_idx, file_size)
-        # print(results[start_idx:end_idx+1])
         for i in mem_block_results:
             # if memory > size of file we insert the block
             # can only insert to the left
             if i[2] == file_size and (i[0], i[1]+1) < (start_idx, end_idx):
-                #print(i[0], i[1])
                 for j in range(file_size):
                     results[i[0] + j], results[start_idx +
                                                j] = results[start_idx + j], results[i[0] + j]
-                # results[i[0]:i[1]+1], results[start_idx:end_idx +
-                #                               1] = results[start_idx:end_idx+1], results[i[0]:i[1]+1]
             elif i[2] > file_size and (i[0], i[1]+1) < (start_idx, end_idx):
                 # slice swapping actually makes sublists: below is in place
                 for j in range(file_size):

@@ -45,21 +45,16 @@ class Solution:
         self.visited = set()
 
         while current_id >= 0:
-            #print('current_id: ', current_id)
             # get file size
             hash_map_file_blocks = self.get_file_block(
                 results, current_id)
-            #file_insert = [current_id] * hash_map_file_blocks[current_id][2]
 
             # get memory block of same size as file
             mem_block_results = self.get_memory_blocks(results)
-            # print(mem_block_results)
-
             # try and insert the current file block into
             results = self.insert_file_block(
                 current_id, results, hash_map_file_blocks, mem_block_results)
             current_id -= 1
-            # print(results)
         return results
 
     def get_file_block(self, results, current_id) -> tuple:
@@ -105,18 +100,13 @@ class Solution:
         insert the file block into this location
         """
         start_idx, end_idx, file_size = hash_map_file_blocks[current_id]
-        #print(start_idx, end_idx, file_size)
-        # print(results[start_idx:end_idx+1])
         for i in mem_block_results:
             # if memory > size of file we insert the block
             # can only insert to the left
             if i[2] == file_size and (i[0], i[1]+1) < (start_idx, end_idx):
-                #print(i[0], i[1])
                 for j in range(file_size):
                     results[i[0] + j], results[start_idx +
                                                j] = results[start_idx + j], results[i[0] + j]
-                # results[i[0]:i[1]+1], results[start_idx:end_idx +
-                #                               1] = results[start_idx:end_idx+1], results[i[0]:i[1]+1]
             elif i[2] > file_size and (i[0], i[1]+1) < (start_idx, end_idx):
                 # slice swapping actually makes sublists: below is in place
                 for j in range(file_size):
@@ -142,8 +132,6 @@ class Solution:
             elif col in free_space_inputs:
                 free_space_block = ['.'] * self.data[col]
                 result_list.extend(free_space_block)
-        # self.grid.append(result_list)
-        # swap the memory into the correct place
         new_result_list = self.swap_algorithm_part1(result_list)
         check_sum += self.calculate_check_sum(new_result_list)
         return check_sum
@@ -163,10 +151,7 @@ class Solution:
             elif col in free_space_inputs:
                 free_space_block = ['.'] * self.data[col]
                 result_list.extend(free_space_block)
-        # self.grid.append(result_list)
-        # swap the memory into the correct place
         new_result_list = self.part_algo(result_list)
-        #new_result_list = [i for i in new_result_list if i != '.']
         check_sum += self.calculate_check_sum(new_result_list)
         return check_sum
 
