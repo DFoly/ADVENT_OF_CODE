@@ -44,12 +44,9 @@ class Solution:
         current_id = results[-1]
         self.visited = set()
 
-        while current_id >= 0:
-            #print('current_id: ', current_id)
-            # get file size
-            hash_map_file_blocks = self.get_file_block(
-                results, current_id)
-            #file_insert = [current_id] * hash_map_file_blocks[current_id][2]
+        file_blocks = self.precompute_file_blocks(results)
+
+        for current_id in sorted(file_blocks.keys(), reverse=True):
 
             # get memory block of same size as file
             mem_block_results = self.get_memory_blocks(results)
@@ -57,27 +54,28 @@ class Solution:
 
             # try and insert the current file block into
             results = self.insert_file_block(
-                current_id, results, hash_map_file_blocks, mem_block_results)
+                current_id, results, file_blocks, mem_block_results)
             current_id -= 1
             # print(results)
         return results
 
-    def get_file_block(self, results, current_id) -> tuple:
-        """
-        get the location and length ot the current file block we want to insert
-        """
-        hash_map_file_block = {}
-        block_size = block_start = 0
+    def precompute_file_blocks(self, results):
+        """Precompute all file block positions and sizes."""
+        file_blocks = {}
         i = len(results) - 1
-        while results[i] == '.' or results[i] != current_id:
-            i -= 1
-        if results[i] == current_id:
-            block_end = i
-            while results[i] == current_id:
-                block_size += 1
+        while i >= 0:
+            if results[i] != '.':
+                current_id = results[i]
+                block_end = i
+                while i >= 0 and results[i] == current_id:
+                    i -= 1
+                block_start = i + 1
+                file_size = block_end - block_start + 1
+                file_blocks[int(current_id)] = (
+                    block_start, block_end, file_size)
+            else:
                 i -= 1
-            hash_map_file_block[current_id] = (i+1, block_end, block_size)
-        return hash_map_file_block
+        return file_blocks
 
     def get_memory_blocks(self, results) -> list:
         """
