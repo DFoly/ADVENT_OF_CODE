@@ -39,17 +39,10 @@ class Solution:
         pass
 
     def main(self):
-        # Parse command-line arguments
-        parser = argparse.ArgumentParser(description="Advent of Code Day $1")
-        parser.add_argument('--t', action='store_true', help="Use test input instead of main input")
-        args = parser.parse_args()
-        
-        # Select input file
-        filename = "test.txt" if args.t else "input.txt"
-        # Construct paths relative to the script directory
-        self.filename = os.path.join(script_dir, filename)
-        with open(self.filename) as f:
-            self.data = [line.split(':') for line in f.readlines()]
+        with open(sys.argv[1]) as f:
+            self.grid = []
+            for line in f.readlines():
+                self.grid.append(list(line.strip()))
 
         print(self.data)
         # Solve parts

@@ -78,7 +78,6 @@ class Solution:
                     new_row, new_col = row + dr,  col + dc
                     if 0 <= new_row < n_rows and 0 <= new_col < n_cols and self.grid[row][col] + 1 == self.grid[new_row][new_col]:
                         queue.append((new_row, new_col))
-
             return path_count
 
         trail_head_locations = self.find_trail_heads()
@@ -86,6 +85,47 @@ class Solution:
         for location in trail_head_locations:
             total_paths += bfs(*location)
         return total_paths
+
+    def part1_dfs(self):
+        """ 
+        DFS using recursion to count all unique 9 cells reachable from 0 cells.
+        """
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        n_rows, n_cols = len(self.grid), len(self.grid[0])
+        # To store unique trail ends (cells with value 9)
+        visited = set()
+        targets = 0
+
+        def dfs(row, col, current_value):
+            # Base cases: out of bounds or incorrect value
+            nonlocal targets
+            visited.add((row, col))
+            # If we reach 9, add the cell to the visited set and stop
+            if self.grid[row][col] == 9:
+                targets += 1
+
+            # if row < 0 or row >= n_rows or col < 0 or col >= n_cols:
+            #     return
+            # if self.grid[row][col] != current_value:
+            #     return
+            # if (row, col) in visited:
+            #     return
+            # Explore all directions recursively
+            for dr, dc in directions:
+                if row < 0 or row >= n_rows or col < 0 or col >= n_cols \
+                        and self.grid[row][col] != current_value \
+                        and (row, col) not in visited:
+                    dfs(row + dr, col + dc, current_value + 1)
+
+        # Find all trail heads (cells with value 0)
+        trail_head_locations = self.find_trail_heads()
+
+        # Start DFS from each trail head
+        for row, col in trail_head_locations:
+            dfs(row, col, 0)  # Start DFS with value 0
+
+        # Return the number of unique trail ends
+        return targets  # len(visited)
 
     def part2_dfs(self):
         """ 
@@ -145,7 +185,7 @@ class Solution:
         # Solve parts
         print("Part 1 BFS:", self.part1_bfs())
         print("Part 2 BFS:", self.part2_bfs())
-        #print("Part 1 DFS:", self.part1_dfs())
+        print("Part 1 DFS:", self.part1_dfs())
         print("Part 2 DFS:", self.part2_dfs())
 
 
