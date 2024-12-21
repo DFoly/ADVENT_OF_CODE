@@ -61,8 +61,6 @@ class Solution:
 
         """
         visited = set()
-        plot_types = set()
-        hash_map = defaultdict(int)  # store results
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         num_rows, num_cols = len(self.grid), len(self.grid[0])
         connected_plots = set()
@@ -79,7 +77,7 @@ class Solution:
             """
             queue = deque([(row, col)])
             perimeter = 0
-            #connected_plots = set()
+            connected_plots = set()
             plant_type = self.grid[row][col]
 
             while len(queue) > 0:
@@ -98,22 +96,24 @@ class Solution:
                     if (new_row, new_col) not in connected_plots:
                         # add all neighbours to the queue so we can visit
                         queue.append((new_row, new_col))
-            return len(connected_plots) * perimeter
+            return connected_plots, len(connected_plots) * perimeter
 
         total_cost = 0
-        visited = []  # stored all conected plants
+        visited = set()  # stored all conected plants
+        regions = []
         for row in range(num_rows):
             for col in range(num_cols):
                 if (row, col) not in visited:
-                    cost = bfs(row, col)
-                    visited.append(connected_plots)
+                    connected_plots, cost = bfs(row, col)
+                    visited |= connected_plots
+                    regions.append(connected_plots)
                     # plant_locations[self.grid[row][col]].extend(
                     #    connected_plants)
                     total_cost += cost
-        return visited, total_cost  # plant_locations, total_cost
+        return regions, visited, total_cost  # plant_locations, total_cost
 
     def part2(self):
-        regions, total_cost = self.part1()
+        regions, visited, total_cost = self.part1()
         total = 0
         for region in regions:
             print(len(region), self.sides(region),
@@ -127,10 +127,10 @@ class Solution:
             for line in f.readlines():
                 self.grid.append(list(line.strip()))
 
-        # print(self.grid)
+        print(self.grid)
         # Solve parts
         print("Part 1:", self.part1())
-        #print("Part 2:", self.part2())
+        print("Part 2:", self.part2())
 
 
 if __name__ == "__main__":
