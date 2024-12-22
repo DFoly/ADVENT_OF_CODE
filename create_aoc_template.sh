@@ -18,10 +18,8 @@ cd "$DAY" || exit
 # Create Python solution file
 cat > solution.py <<EOF
 import argparse
-from typing import List
-
 from typing import List, Set, Tuple
-import os
+import os, sys
 
 # Get the directory of the current script
 script_dir = os.path.dirname(os.path.abspath(__file__))

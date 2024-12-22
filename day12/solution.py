@@ -24,6 +24,8 @@ class Solution:
         """
         up, down, left, right = (set() for _ in range(4))
         for r, c in region:
+            # if cell above is not in region then we are at the edge of region
+            # creating cells with fences
             if (r - 1, c) not in region:
                 up.add((r, c))
             if (r + 1, c) not in region:
@@ -33,14 +35,17 @@ class Solution:
             if (r, c + 1) not in region:
                 right.add((r, c))
 
+        # loop through cells we know are at edges of region
         count = 0
         for r, c in up:
+            # if cell in up and left we know that cell above and to left is outside region
             if (r, c) in left:
                 count += 1
             if (r, c) in right:
                 count += 1
             if (r - 1, c - 1) in right and (r, c) not in left:
                 count += 1
+
             if (r - 1, c + 1) in left and (r, c) not in right:
                 count += 1
 
