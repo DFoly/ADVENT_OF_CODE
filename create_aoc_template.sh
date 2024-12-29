@@ -39,8 +39,7 @@ class Solution:
     def main(self):
         with open(sys.argv[1]) as f:
             self.grid = []
-            for line in f.readlines():
-                self.grid.append(list(line.strip()))
+            grid = list(map(int, line) for line in f.readlines())
 
         print(self.data)
         # Solve parts
